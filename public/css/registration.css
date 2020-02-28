@@ -1,0 +1,51 @@
+body{
+    background-image: url("../images/registerbg.jpg");
+    background-repeat: no-repeat;
+}
+#image-dropdown {
+    border:1px solid white;
+    width:200px;
+    height:10px; 
+    overflow:hidden;
+    transition: height 0.1s;
+    margin-bottom: 20px;
+    width: 300px;
+    padding: 10px auto;
+}
+
+#image-dropdown:hover {
+    height:250px; overflow-y:scroll;
+    transition: height 0.5s;
+}
+#image-dropdown input {
+    position:absolute;top:0;left:0;opacity:0;
+}
+#image1 ,#image2,#image3,#image4,#image5,#image6 {
+    display: none;
+    margin:10px auto;
+    opacity:0.2; 
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
+#image1 {
+    background:url("../images/man.jpg") 50% 50%;
+}
+#image2 {
+    background:url("../images/woman.jpg") 50% 50%; 
+}
+#image3 {
+    background:url("../images/man2.jpg") 50% 50%;
+}#image4 {
+    background:url("../images/man3.jpg") 50% 50%;
+}#image5 {
+    background:url("../images/woman2.jpg") 50% 50%;
+}#image6 {
+    background:url("../images/man4.jpg") 50% 50%;
+}
+#image-dropdown:hover label{
+    display:block;
+}
+#image-dropdown input:checked + label {
+    opacity:1 !important; display:block;
+}

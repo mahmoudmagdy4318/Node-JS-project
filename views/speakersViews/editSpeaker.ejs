@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>speakers</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/css/adminProfileStyle.css" rel="stylesheet">
+    <link href="/css/registration.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <%- include("../partials/header")-%>
+    </header>
+
+    <!-- <div class="container"> -->
+    <% data.forEach(function(speaker) { %>
+    <div class="container bg-transparent mt-2 p-md-5">
+        <form action="/speakers/edit" method="POST">
+            <div class="form-row col-md-4">
+                <label class="text-light h2" for="inputID" >Id</label>
+                <input type="text" class="form-control bg-transparent text-light" id="inputID" name="_id"
+                    value="<%=speaker._id %>" readonly>
+            </div> 
+            <div class="form-row col-md-4">
+                <label class="text-light h2" for="inputFullname">Fullname</label>
+                <input type="text" class="form-control bg-transparent text-light" id="inputFullname" name="fullname"
+                    value="<%=speaker.fullname%>" required>
+            </div>
+            <div class="form-row col-md-4">
+                <label class="text-light h2" for="inputPassword4">Password</label>
+                <input type="password" class="form-control bg-transparent text-light" id="inputPassword4"
+                    name="password" value="<%=speaker.password%>" readonly>
+            </div>
+            <div class="form-row col-md-4">
+                <label class="text-light h2" for="inputUsername">Username</label>
+                <input type="text" class="form-control bg-transparent text-light" id="inputUsername" name="username"
+                    value="<%=speaker.username%>" readonly>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label class="text-light h2" for="inputCity">City</label>
+                    <input type="text" class="form-control bg-transparent text-light" id="inputCity" name="address.city"
+                        value="<%=speaker.address.city%>">
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label class="text-light h2" for="inputStreet">Street</label>
+                    <input type="text" class="form-control bg-transparent text-light" id="inputStreet"
+                        name="address.street" value="<%=speaker.address.street%>">
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="text-light h2" for="inputBuilding">Building</label>
+                    <input type="text" class="form-control bg-transparent text-light" id="inputBuilding"
+                        name="address.building" value="<%=speaker.address.building%>">
+                </div>
+            </div>
+                
+        <label class="text-light mt-3 h3">Choose default profile icon</label>
+        <div class="form-row " id="image-dropdown">
+          <input type="radio" id="line1" name="image" value="/images/man.jpg" checked="checked" />
+          <label for="line1" id="image1"></label>
+          <input type="radio" id="line2" name="image" value="/images/woman.jpg" />
+          <label for="line2" id="image2"></label>
+          <input type="radio" id="line3" name="image" value="/images/man2.jpg" />
+          <label for="line3" id="image3"></label>
+          <input type="radio" id="line4" name="image" value="/images/man3.jpg" />
+          <label for="line4" id="image4"></label>
+          <input type="radio" id="line5" name="image" value="/images/woman2.jpg" />
+          <label for="line5" id="image5"></label>
+          <input type="radio" id="line6" name="image" value="/images/man4.jpg" />
+          <label for="line6" id="image6"></label>
+        </div>
+
+            <button type="submit" class="btn btn-primary align-content-center">Submit</button>
+        </form>
+    </div>
+    <%})%>
+    <!-- </div>   -->
+    <script src="/dist/jquery.slim.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

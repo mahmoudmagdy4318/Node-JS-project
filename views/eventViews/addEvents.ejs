@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>speakers</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="/css/adminProfileStyle.css" rel="stylesheet">
+  <link href="/jquery-ui-1.12.1.custom/jquery-ui.css" rel="stylesheet">
+  
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <%- include("../partials/header")-%>
+    </header>
+
+    <script src="/dist/jquery.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+    <script>
+      $( function() {
+        $( "#InputDate" ).datepicker();
+        $("#mainspeakerSelect").change(function(){
+            let selectedIndex=document.getElementById("mainspeakerSelect").options.selectedIndex;
+            let selectedName=document.getElementById("mainspeakerSelect").item(selectedIndex);
+            let childs=document.getElementById("otherSpeakersSelect").children;
+            $(childs).show();
+            for(i=0;i<childs.length;i++){
+              if(childs[i].isEqualNode(selectedName)){
+                $(childs[i]).hide();
+                break;
+              }
+                             
+            }
+            console.log(selectedName);
+        })
+        $("#otherSpeakersSelect").change(function(e){
+            let childs=document.getElementById("mainspeakerSelect").children;
+            $(childs).show();
+            var values = $('#otherSpeakersSelect').val();
+            for(i=0;i<childs.length;i++){
+                values.forEach(value=>{
+                  if(childs[i].value==value){
+                    $(childs[i]).hide();
+                  }
+                })               
+            }
+        }) 
+      });  
+    </script>
+
+
+        <form action="/events/add" method="POST">
+        <div class="form-group">
+          <label for="InputID">ID</label>
+          <input type="text" class="form-control" id="InputID" aria-describedby="IDHelp" placeholder="Enter ID" name="_id">
+          <small id="IDHelp" class="form-text text-muted">The ID of the event</small>
+        </div>
+        <div class="form-group">
+          <label for="InputTitle">title</label>
+          <input type="text" class="form-control" id="InputTitle" placeholder="Event title" name="title">
+        </div>
+        <div class="form-group">
+          <label for="InputDate">Event date</label>
+          <input type="text" class="form-control" id="InputDate" placeholder="Event Date" name="eventDate">
+        </div>
+        <div class="form-group">
+                <label for="mainspeakerSelect">main speaker</label>
+                <select class="form-control" id="mainspeakerSelect" name="mainSpeaker">
+                <%data.forEach((speaker)=>{%>
+                  <option value="<%=speaker._id%>"><%=speaker.fullname%></option>
+                <%})%>  
+                </select>
+              </div>
+              <div class="form-group col-4">
+                <select name="otherSpeakers" class="selectpicker" multiple id="otherSpeakersSelect">
+                    <option value="" disabled selected >other speakers</option>
+                    <%data.forEach((speaker)=>{ %>
+                      <option value="<%=speaker._id%>"><%=speaker.fullname%></option>
+                    <%})%> 
+                  </select>
+              </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        
+    
+    </body>
+</html>

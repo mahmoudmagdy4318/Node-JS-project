@@ -1,0 +1,89 @@
+<html>
+    <head>
+        <link href="/css/speakerProfile.css" rel="stylesheet">
+
+    </head>
+    <body>
+
+            <script src="/dist/jquery.min.js"></script>
+            <script src="/js/bootstrap.bundle.min.js"></script>        
+            <script>
+                function apologize(id,name,title,eventObj){
+                    $.ajax({
+                        url:"http://localhost:8082/speakeraccess/apologize/",
+                        method:"POST",
+                        contentType:"application/json",
+                        data:JSON.stringify({id,name,title}),
+                        dataType:"text",
+                        success:function(result){
+                            $(eventObj).parents("tr").remove();
+                            console.log(result);
+                            
+                        },
+                        error:function(error){
+                        console.log(error+"");
+                        } 
+                    })
+                    console.log(name+"ma");
+                }    
+            </script>
+            <header>
+                    <%- include("../partials/speakersHeader")-%>
+            </header>
+            <%if(data[0].avatar!=null){%>
+            <img id="profileImage" src="<%=data[0].avatar%>">
+            <%}else{%>
+            <img id="profileIcon" src="<%=data[0].image%>">
+            <%}%>    
+            <div class="card-header">
+                    Your Upcoming Events
+                </div>
+                <table class="table">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Event date</th>
+                        <th scope="col">Main speaker</th>
+                        <th scope="col">Other speakers</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <% events.forEach((event)=>{%>
+                            <tr>
+                                <td><%=event._id%></td>
+                                <td><%=event.title%></td>                                
+                                <td>
+                                    <%= Intl.DateTimeFormat('en-US',{ year: 'numeric', month: 'short', day:'2-digit' }).format(event.eventDate) %>
+                                </td>
+        
+                                <%if(event.mainSpeaker!=null){%>
+                                    <td><%=event.mainSpeaker.fullname%></td>
+                                    <%}else{%>
+                                    <td class="text-danger">no speaker assigned</td>
+                                <%}%> 
+                                
+                                <td>
+                                    <%if(event.otherSpeakers!=null){%>
+                                        <ul>
+                                            <%event.otherSpeakers.forEach(function(speaker) { %>
+                                            <li><%=speaker.fullname%></li>
+                                            <% }); %>
+                                        </ul>
+            
+                                      <%}else{%>
+                                              <li>none</li>
+                                      <%}%> 
+                                </td>
+        
+                              <td><a type="button" class="btn btn-danger" href="#" id="apologizeBtn" onclick="apologize(<%=event._id%>,'<%=name%>','<%=event.title%>',this)">apologize </a></td>
+            
+                            </tr>
+                        <%})%>
+                    </tbody>
+                  </table>  
+    </body>
+
+</html>

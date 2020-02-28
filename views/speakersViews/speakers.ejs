@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>speakers</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="/css/adminProfileStyle.css" rel="stylesheet">
+  
+</head>
+<body>
+    <script src="/dist/jquery.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script>
+      
+        function  deleteSpeaker(_id,speakerObj){
+            $.ajax({
+                url:"http://localhost:8082/speakers/delete/",
+                method:"POST",
+                contentType:"application/json",
+                data:JSON.stringify({_id:_id}),
+                dataType:"text",
+                success:function(result){
+                    $(speakerObj).parents("tr").remove();
+                },
+                error:function(error){
+                  console.log(error+"");
+                }
+  
+            });  
+          };
+     
+      </script>
+
+    <header>
+        <%- include("../partials/header")-%>
+    </header>
+
+    <div class="card-header">
+        Speakers
+      </div>
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+            <% data.forEach(function(speaker) { %>
+                <tr>
+                    <th><%=speaker._id %></th>
+                    <td><%=speaker.fullname %></td>
+                  <td><a type="button" class="btn btn-warning" href="/speakers/edit/<%=speaker._id %>">edit</a></td> 
+                  <td><a type="button" class="btn btn-danger" href="#" id="deleteBtn" onclick="deleteSpeaker(<%=speaker._id %>,this)">delete </a></td>
+
+                </tr>
+            <% }); %>
+        </tbody>
+      </table>
+      
+
+  
+    
+    
+    
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>admin profile</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="/css/adminProfileStyle.css" rel="stylesheet">
+  
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <%- include("../partials/header")-%>
+    </header>
+
+
+    <table class="table col-4">
+      <thead class="thead-light">
+        <th scope="col">date</th>
+        <th scope="col">notifications</th>
+      </thead>
+      <tbody >
+          <%data.forEach(notification=>{%>
+            <tr>
+              <td class="text-info">
+                  <%= Intl.DateTimeFormat('en-US',{ year: 'numeric', month: 'short', day:'2-digit',hour:'numeric', minute: '2-digit', second: '2-digit'  }).format(notification.date) %>
+                </td>
+              <td class="text-danger"><%=notification.body%></td>
+            </tr>
+          <%})%>
+      </tbody>
+    </table>
+    <script src="dist/jquery.slim.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+  
+  
+  
+  
+  </body>
+</html>

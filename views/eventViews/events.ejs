@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>speakers</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="/css/adminProfileStyle.css" rel="stylesheet">
+  
+</head>
+<body>
+    <script src="/dist/jquery.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script>
+      
+        function  deleteEvent(id,eventObj){
+            jQuery.ajax({
+                url:"http://localhost:8082/events/delete/",
+                method:"POST",
+                contentType:"application/json",
+                data:JSON.stringify({id:id}),
+                dataType:"text",
+                success:function(result){
+                    $(eventObj).parents("tr").remove();
+                },
+                error:function(error){
+                  console.log(error+"");
+                }
+  
+            });  
+          };
+     
+      </script>
+
+    
+    <!-- Navigation -->
+    <header>
+        <%- include("../partials/header")-%>
+    </header>    
+    
+    
+    
+        <div class="card-header">
+            Events
+        </div>
+        <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Event date</th>
+                <th scope="col">Main speaker</th>
+                <th scope="col">Other speakers</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+                <% data.forEach(function(event) { %>
+                    <tr>
+                        <th><%=event._id%></th>
+                        <td><%=event.title %></td>
+                        <!-- <td><%=event.eventDate %></td> -->
+                        <td>
+                          <%= Intl.DateTimeFormat('en-US',{ year: 'numeric', month: 'short', day:'2-digit' }).format(event.eventDate) %>
+                        </td>
+                        <%if(event.mainSpeaker!=null){%>
+                        <td><%=event.mainSpeaker.fullname%></td>
+                        <%}else{%>
+                        <td class="text-danger">no speaker assigned</td>
+                        <%}%>  
+                        <td>
+                            <%if(event.otherSpeakers!=null){%>
+                              <ul>
+                                  <%event.otherSpeakers.forEach(function(speaker) { %>
+                                  <li><%=speaker.fullname%></li>
+                                  <% }); %>
+                              </ul>
+
+                            <%}else{%>
+                                    <li>none</li>
+                            <%}%> 
+
+                        </td>
+
+                      <td><a type="button" class="btn btn-warning" href="/events/update/<%=event._id %>">edit</a></td> 
+                      <td><a type="button" class="btn btn-danger" href="#" id="deleteBtn" onclick="deleteEvent(<%=event._id%>,this)">delete </a></td>
+    
+                    </tr>
+                <% }); %>
+            </tbody>
+          </table>
+
+
+    
+    </body>
+</html>
