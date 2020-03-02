@@ -23,7 +23,7 @@ speakersRouter.get(["/list","/"],(request,response)=>{
         })
 })
 speakersRouter.get("/add",(request,response)=>{
-    response.render("speakersViews/addSpeakers.ejs");
+    response.render("speakersViews/addSpeakers.ejs",{message: request.flash()});
 })
 
 speakersRouter.post("/add",(request,response)=>{
@@ -33,23 +33,34 @@ speakersRouter.post("/add",(request,response)=>{
     newspeaker.save().then((data)=>{
         response.redirect("/speakers/");
     }).catch((error)=>{
+        try{
+            request.flash('registrationError',Object.keys(error.errors)[0]+" is invalid");
+            response.redirect("/speakers/add");
+            
+    }catch{
+        request.flash('registrationError',Object.keys(error.keyPattern)[0]+" is already taken");
         response.redirect("/speakers/add");
+            console.log("pattern is"+error.keyPattern);
+    }
     })
 })
 
 speakersRouter.post("/edit",(request,response)=>{
-    Speaker.update({_id:request.body._id},{$set: 
+    let id= request.body._id;
+    Speaker.update({_id:id},{$set: 
         request.body    
     }).then((data)=>{
         response.redirect("/speakers/");
     }).catch((error)=>{
-        response.redirect("/speakers/edit");
+        let errorRes=(error+"").split(" ")[(error+"").split(" ").length-1];
+        request.flash('registrationError',errorRes.substring(9)+" is invalid");
+        response.redirect("/speakers/edit/"+id);
     })
 })
 
 speakersRouter.get("/edit/:id",(request,response)=>{ 
     Speaker.find({_id:request.params.id}).then((data)=>{
-        response.render("speakersViews/editSpeaker.ejs",{data});
+        response.render("speakersViews/editSpeaker.ejs",{data, message: request.flash()});
     }).catch((error)=>{
         console.log(error);
     })  

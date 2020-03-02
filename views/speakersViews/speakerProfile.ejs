@@ -8,12 +8,12 @@
             <script src="/dist/jquery.min.js"></script>
             <script src="/js/bootstrap.bundle.min.js"></script>        
             <script>
-                function apologize(id,name,title,eventObj){
+                function apologize(id,name,mainSpeakerId,title,eventObj){
                     $.ajax({
                         url:"http://localhost:8082/speakeraccess/apologize/",
                         method:"POST",
                         contentType:"application/json",
-                        data:JSON.stringify({id,name,title}),
+                        data:JSON.stringify({id,name,mainSpeakerId,title}),
                         dataType:"text",
                         success:function(result){
                             $(eventObj).parents("tr").remove();
@@ -78,12 +78,14 @@
                                       <%}%> 
                                 </td>
         
-                              <td><a type="button" class="btn btn-danger" href="#" id="apologizeBtn" onclick="apologize(<%=event._id%>,'<%=name%>','<%=event.title%>',this)">apologize </a></td>
+                              <td><a type="button" class="btn btn-danger" href="#" id="apologizeBtn" onclick="apologize(<%=event._id%>,'<%=name%>',<%=event.mainSpeaker._id%>,'<%=event.title%>',this)">apologize </a></td>
             
                             </tr>
                         <%})%>
                     </tbody>
-                  </table>  
+                  </table> 
+    <%- include("../partials/footer")-%>
+
     </body>
 
 </html>

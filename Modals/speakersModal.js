@@ -12,17 +12,17 @@ const speakerSchema=new mongoose.Schema({
         street:Number,
         building:Number
     },
-    image:String,
+    image:String, 
     avatar:String
 })
 
 const hashPassword = function(next) {
     let password;
-    const self = this
+    const self = this;
     if (self.op=="updateOne"){
         password = self.get('password')
     }else{
-        password = self.password
+        password = self.password;
     }
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
         if (err) return next(err);
@@ -30,9 +30,9 @@ const hashPassword = function(next) {
             debugger
             if (err) return next(err);
             if (self.op=="updateOne"){
-                password = self.set('password',hash)
+                password = self.set('password',hash);
             }else{
-                self.password = hash
+                self.password = hash;
             }
             next();
         });

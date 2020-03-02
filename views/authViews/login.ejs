@@ -19,11 +19,8 @@
 
 </head>
     <body>
-        <!-- <form action="/login" method="POST">
-            username:<input type="text" name="username"><br/>
-            password:<input type="password" name="password"><br/>
-            <input type="submit">
-        </form> -->
+       
+      
         <div class="container-fluid">
             <div class="row no-gutter">
               <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
@@ -32,6 +29,12 @@
                   <div class="container">
                     <div class="row">
                       <div class="col-md-9 col-lg-8 mx-auto">
+                          <% if(message['user']||message['pass']){ %>
+                            <div class="alert alert-danger" role="alert">
+                                <strong><%=message['user']%></strong> 
+                                <strong><%=message['pass']%></strong> 
+                            </div>
+                        <% } %>
                         <h3 class="login-heading mb-4">Welcome back!</h3>
                         <form action="/login" method="POST">
                           <div class="form-label-group">

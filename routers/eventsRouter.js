@@ -31,7 +31,7 @@ eventsRouter.get(["/list","/"],(request,response)=>{
 
 eventsRouter.get("/add",(request,response)=>{
     speakerSchema.find({},{_id:1,fullname:1}).then((data)=>{
-        response.render("eventViews/addEvents.ejs",{data});
+        response.render("eventViews/addEvents.ejs",{data , message: request.flash()});
     }).catch((error)=>{
         console.log(error);
     })
@@ -45,7 +45,15 @@ eventsRouter.post("/add",(request,response)=>{
     newEvent.save().then((data)=>{
         response.redirect("/events/")
     }).catch((error=>{
-        console.log(error+"");
+        try{
+            request.flash('registrationError',Object.keys(error.errors)[0]+" is invalid");
+            response.redirect("/events/add");
+            
+    }catch{
+        request.flash('registrationError',Object.keys(error.keyPattern)[0]+" is already taken");
+            response.redirect("/events/add");
+            console.log("pattern is"+error.keyPattern);
+    }
     }))
 })
 
@@ -55,7 +63,7 @@ eventsRouter.get("/update/:id",(request,response)=>{
     .then((eventData)=>{
         let event=eventData[0];
         speakerSchema.find({},{_id:1,fullname:1}).then((data)=>{
-            response.render("eventViews/editEvents.ejs",{data,event});
+            response.render("eventViews/editEvents.ejs",{data,event  });
             console.log(event.otherSpeakers);
             
         }).catch((error)=>{
@@ -75,7 +83,15 @@ eventsRouter.post("/update",(request,response)=>{
     }).then((data)=>{
         response.redirect("/events/")})
     .catch((error)=>{
+        try{
+            request.flash('registrationError',Object.keys(error.errors)[0]+" is invalid");
+            response.redirect("/events/update")
+            
+    }catch{
+        request.flash('registrationError',Object.keys(error.keyPattern)[0]+" is already taken");
         response.redirect("/events/update")
+            console.log("pattern is"+error.keyPattern);
+    }
     })
 })
 

@@ -8,7 +8,8 @@ const adminRouter=require("./routers/adminRouter");
 const mongoose=require("mongoose");
 const path=require("path");
 const session=require("express-session");
-
+var cookieParser = require('cookie-parser')
+const flash = require('connect-flash');
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -34,13 +35,24 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 
 
+server.use(cookieParser('secret'));
+
 server.set('view enginpne', 'ejs');
 server.set("views",path.join(__dirname,"views"));
 server.use(session({
     secret: 'iti mansoura',
-    maxAge: 100000000
+    cookie: { maxAge: 600000 }
 }));
 
+server.use(flash());
+
+
+server.use((request, response, next)=>{
+    response.locals.success_messages = request.flash('success_messages');
+    response.locals.error_messages = request.flash('error_messages');
+    next();
+});
+  
 server.use(express.static(path.join(__dirname,"public")));
 server.use(express.static(path.join(__dirname,"images")));
 

@@ -13,15 +13,14 @@ const upload=multer({dest:'public/images'});
 authRouter.get("/login",(request,response)=>{
     console.log(request.query); //query login string
     console.log(request.params); //params of routing
-
-    response.render("authViews/login.ejs");
+    response.render("authViews/login.ejs", { message: request.flash() });
 })
 
 authRouter.post("/login",(request,response)=>{
     if(request.body.username=="mahmoud"&&request.body.password==123){  
         request.session.role="admin";     
         response.redirect("/admin/profile");
-    }        
+    }         
     else{        
         speakerSchema.find({username:request.body.username})
         .then(function(user) {
@@ -29,6 +28,7 @@ authRouter.post("/login",(request,response)=>{
         })
         .then(function(samePassword) {
             if(!samePassword) {
+                request.flash('pass',"wrong password!");
                 response.redirect("/login");
             }else{
                 request.session.role="speaker";
@@ -37,13 +37,14 @@ authRouter.post("/login",(request,response)=>{
             }
         })
         .catch(function(error){
+            request.flash('user',"user not found!");
             response.redirect("/login");
         })    
     }  
 })
 
 authRouter.get("/register",(request,response)=>{
-    response.render("authViews/registration.ejs");
+    response.render("authViews/registration.ejs",{ message: request.flash() });
 })
 
 authRouter.post("/register",upload.single('avatar'),(request,response)=>{
@@ -56,13 +57,22 @@ authRouter.post("/register",upload.single('avatar'),(request,response)=>{
         })
     }else{
         newspeaker=new speakerSchema({
-            ...request.body
+            ...request.body 
         }) 
     }
     newspeaker.save().then((data)=>{
         response.redirect("/login");
     }).catch((error)=>{
-        response.redirect("/register");
+        try{
+                request.flash('registrationError',Object.keys(error.errors)[0]+" is invalid");
+                response.redirect("/register");
+                
+        }catch{
+            request.flash('registrationError',Object.keys(error.keyPattern)[0]+" is already taken");
+                response.redirect("/register");
+                console.log("pattern is"+error.keyPattern);
+        }
+        
     })
 })
 

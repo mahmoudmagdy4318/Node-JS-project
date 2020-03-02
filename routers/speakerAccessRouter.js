@@ -58,7 +58,7 @@ speakersAccessRouter.get("/events",(request,response)=>{
 
 speakersAccessRouter.get("/edit/:name",(request,response)=>{ 
     Speaker.find({username:request.params.name}).then((data)=>{
-        response.render("speakersViews/updateSpeakerData.ejs",{data});
+        response.render("speakersViews/updateSpeakerData.ejs",{data, message: request.flash()});
     }).catch((error)=>{
         console.log(error);
     })  
@@ -66,7 +66,6 @@ speakersAccessRouter.get("/edit/:name",(request,response)=>{
 
 speakersAccessRouter.post("/edit",upload.single('avatar'),(request,response)=>{
     let username=request.body.username;
-    debugger
     if(request.file){
         Speaker.updateOne({_id:request.body._id},{$set:{ 
             ...request.body,
@@ -88,19 +87,35 @@ speakersAccessRouter.post("/edit",upload.single('avatar'),(request,response)=>{
             console.log("success");
             response.redirect("/speakeraccess/profile/"+username);
         }).catch((error)=>{
-        console.log("i'm out post edit");
-    
-            response.redirect("/speakeraccess/edit/"+username);
+            let errorRes=(error+"").split(" ")[(error+"").split(" ").length-1];
+            request.flash('registrationError',errorRes.substring(9)+" is invalid");
+            response.redirect("/speakeraccess/edit/"+username);                
         })
     }
 })
 
 speakersAccessRouter.post("/apologize",(request,response)=>{
-    console.log(request.body);
-    let eventTitle;
+    debugger
     Speaker.find({username:request.body.name}).then((speaker)=>{
-         eventsSchema.updateOne({_id:request.body.id},{$pull:{otherSpeakers: {$in: [speaker[0]._id] }}})
+        if(speaker[0]._id==request.body.mainSpeakerId){
+            eventsSchema.updateOne({_id:request.body.id,mainSpeaker:speaker[0]._id},{$set:{mainSpeaker: null }})
+            .then((data)=>{
+                let newNotificatione=new notification({
+                    body:"Mr. "+request.body.name+" apologized for "+request.body.title+" event",
+                    date: new Date()
+                })
+                newNotificatione.save().then((data2)=>{
+                   response.send("success");
+                }).catch((error)=>{
+                    console.log(error);
+                })
+            }).catch((error)=>{
+                console.log(error);
+            })
+        }else{
+            eventsSchema.updateOne({_id:request.body.id},{$pull:{otherSpeakers: {$in: [speaker[0]._id] }}})
          .then((data)=>{
+             
              let newNotificatione=new notification({
                  body:"Mr. "+request.body.name+" apologized for "+request.body.title+" event",
                  date: new Date()
@@ -110,9 +125,10 @@ speakersAccessRouter.post("/apologize",(request,response)=>{
              }).catch((error)=>{
                  console.log(error);
              })
-         }).catch((error)=>{
-             console.log(error);
-         })
+            }).catch((error)=>{
+                console.log(error);
+            })
+        }
     }).catch((error)=>{
         console.log(error);
     })

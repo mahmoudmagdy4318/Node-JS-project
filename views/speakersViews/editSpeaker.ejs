@@ -30,6 +30,11 @@
     <!-- <div class="container"> -->
     <% data.forEach(function(speaker) { %>
     <div class="container bg-transparent mt-2 p-md-5">
+            <% if(message['registrationError']){ %>
+                <div class="alert alert-danger" role="alert">
+                    <strong><%=message['registrationError']%></strong> 
+                </div>
+            <% } %>
         <form action="/speakers/edit" method="POST">
             <div class="form-row col-md-4">
                 <label class="text-light h2" for="inputID" >Id</label>
@@ -39,7 +44,7 @@
             <div class="form-row col-md-4">
                 <label class="text-light h2" for="inputFullname">Fullname</label>
                 <input type="text" class="form-control bg-transparent text-light" id="inputFullname" name="fullname"
-                    value="<%=speaker.fullname%>" required>
+                    value="<%=speaker.fullname%>" required pattern="([A-Za-z]+[ ]*)+">
             </div>
             <div class="form-row col-md-4">
                 <label class="text-light h2" for="inputPassword4">Password</label>
@@ -56,7 +61,7 @@
                 <div class="form-group col-md-3">
                     <label class="text-light h2" for="inputCity">City</label>
                     <input type="text" class="form-control bg-transparent text-light" id="inputCity" name="address.city"
-                        value="<%=speaker.address.city%>">
+                        value="<%=speaker.address.city%>" pattern="[A-Za-z]+">
                 </div>
 
                 <div class="form-group col-md-3">
@@ -91,7 +96,7 @@
         </form>
     </div>
     <%})%>
-    <!-- </div>   -->
+    
     <script src="/dist/jquery.slim.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
 </body>
